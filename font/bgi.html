@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BGI</title>
+    <style>
+        html {
+            font-family: monospace;
+        }
+        canvas {
+            display: block;
+            image-rendering: pixelated;
+            border: 2px solid;
+            margin-bottom: 1em;
+        }
+    </style>
+</head>
+<body>
+    <p id="alphabetP"></p>
+    <canvas id="canvas1"></canvas>
+    <canvas id="canvas2"></canvas>
+    <canvas id="canvas3"></canvas>
+    <textarea id="output" rows="10" cols="40"></textarea>
+    <script>
+        // Useful when printing numbers for debugging.
+        function b(n) {
+            return n.toString(2).padStart(32, "0");
+        }
+
+        const alphabetStart = " ".charCodeAt(0);
+        const alphabetEnd = "~".charCodeAt(0);
+        const alphabet = Array.from({ length: alphabetEnd - alphabetStart + 1 }, (_, i) => String.fromCharCode(alphabetStart + i));
+        alphabetP.textContent = alphabet.join("");
+
+        const ctx1 = canvas1.getContext("2d");
+        const ctx2 = canvas2.getContext("2d");
+        const ctx3 = canvas3.getContext("2d");
+
+        const image = new Image();
+        image.src = "bgi-default-8x8.png";
+        image.onerror = () => {
+            console.error("Failed to load image");
+        }
+        image.onload = () => {
+            canvas1.width = canvas2.width = image.naturalWidth;
+            canvas1.height = canvas2.height = image.naturalHeight;
+            const scaleX = 2;
+            const scaleY = 3;
+            canvas3.width = image.naturalWidth * scaleX;
+            canvas3.height = image.naturalHeight * scaleY;
+
+            ctx1.drawImage(image, 0, 0);
+            const { data } = ctx1.getImageData(0, 0, image.naturalWidth, image.naturalHeight);
+
+            // Encode font. Each char is monochrome and 8x8=64 pixels. Using two 32-bit numbers,
+            // we can use each bit to indicate if the pixel is on or off.
+            const font = Object.fromEntries(alphabet.map(char => {
+                const code = char.charCodeAt(0);
+                let num1 = 0;
+                let num = 0;
+                let i = 0;
+                for (let y = 0; y < 8; y++) {
+                    for (let x = 0; x < 8; x++) {
+                        const index = y * image.naturalWidth * 4 + code * 8 * 4 + x * 4;
+                        const alpha = data[index + 3];
+                        if (alpha === 255) {
+                            // Set bit number `i` to 1.
+                            num = num | (1 << i);
+                        }
+                        i++;
+                    }
+                    if (y === 3) {
+                        num1 = num;
+                        num = 0;
+                        i = 0;
+                    }
+                }
+                return [char, [num1, num]];
+            }));
+
+            // Decode font, to verify it works.
+            ctx2.fillStyle = "magenta";
+            for (const char of alphabet) {
+                const code = char.charCodeAt(0);
+                const [num1, num2] = font[char];
+                let num = num1;
+                let i = 0;
+                for (let y = 0; y < 8; y++) {
+                    for (let x = 0; x < 8; x++) {
+                        // If bit number `i` is set to 1.
+                        if (num & (1 << i)) {
+                            ctx2.fillRect(code * 8 + x, y, 1, 1);
+                        }
+                        i++;
+                    }
+                    if (y === 3) {
+                        num = num2;
+                        i = 0;
+                    }
+                }
+            }
+
+            // Decode font scaled, to verify it works.
+            ctx3.fillStyle = "red";
+            for (const char of alphabet) {
+                const code = char.charCodeAt(0);
+                const [num1, num2] = font[char];
+                let num = num1;
+                let i = 0;
+                for (let y = 0; y < 8; y++) {
+                    for (let x = 0; x < 8; x++) {
+                        // If bit number `i` is set to 1.
+                        if (num & (1 << i)) {
+                            ctx3.fillRect((code * 8 + x) * scaleX, y * scaleY, scaleX, scaleY);
+                        }
+                        i++;
+                    }
+                    if (y === 3) {
+                        num = num2;
+                        i = 0;
+                    }
+                }
+            }
+
+            const outputCode = alphabet.map(char => `${JSON.stringify(char)}: ${JSON.stringify(font[char]).replace(",", ", ")},\n`).join("");
+            output.textContent = outputCode;
+        };
+    </script>
+</body>
+</html>
