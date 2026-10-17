@@ -200,16 +200,16 @@ function keyboard_isr()
 }
 
 // CS:048A  score text with the current color/font
-void draw_int_text(int x, int y, int value)
+function draw_int_text(x, y, value)
 {
-    char buf[10];
+    let buf = Array(10).fill(0);
 
     itoa(value, buf, 10);
     outtextxy(x, y, buf);
 }
 
 // CS:04B8  Blue steers with the mouse; the middle button counts as both
-void poll_mouse_buttons(void)
+function poll_mouse_buttons()
 {
     _AX = MOUSE_GET_STATUS;
     geninterrupt(MOUSE_INTERRUPT);
@@ -218,14 +218,14 @@ void poll_mouse_buttons(void)
 }
 
 // CS:04CE  also leaves the fill color set for later bar() calls
-void clear_screen_color(int color)
+function clear_screen_color(color)
 {
     setfillstyle(SOLID_FILL, color);
     bar(0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1);
 }
 
 // CS:04F6  collision test of the 3x3 head when dx is not 0
-int crashes_when_dx_is_not_zero(int x, int y, int dy)
+function crashes_when_dx_is_not_zero(x, y, dy)
 {
     if (dy == -1) {
         if (is_obstacle(x, y)) return 1;

@@ -11,3 +11,4 @@ This project translates [zatacka.cpp](https://github.com/SimonAlling/zatacka-dec
 - `int arr[LENGTH];` is turned into `let arr = Array(LENGTH).fill(0);`.
 - `void *arr[LENGTH];` is turned into `let arr = Array(LENGTH);`.
 - Inline `asm` is commented out.
+- Functions: The return type is replaced with the `function` keyword, and the parameter types are removed.
