@@ -6,3 +6,4 @@ This project translates [zatacka.cpp](https://github.com/SimonAlling/zatacka-dec
 
 - `#include` is commented out.
 - `#define CONSTANT value` is turned into `const CONSTANT = value`.
+- `#define macro(x, y) (x + y)` is turned into `const macro = (x, y) => (x + y)`.

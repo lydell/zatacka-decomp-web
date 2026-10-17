@@ -34,7 +34,7 @@ const SPAWN_MARGIN = 100
 const SPAWN_FLICKER_COUNT = 8
 
 const MIN_ROUNDS = 10
-#define score_to_win(participants) (((participants) - 1) * MIN_ROUNDS)
+const score_to_win = (participants) => (((participants) - 1) * MIN_ROUNDS)
 
 const THE_THICKNESS = 3
 const TWO = (THE_THICKNESS - 1)
@@ -51,7 +51,7 @@ const LOBBY_CONTROLS_X = 80
 const LOBBY_READY_X = 240
 const LOBBY_READY_CLEAR_RIGHT = 400
 const LOBBY_ROW_HEIGHT = 50
-#define lobby_row_y(id) ((id) * LOBBY_ROW_HEIGHT + LOBBY_ROW_HEIGHT)
+const lobby_row_y = (id) => ((id) * LOBBY_ROW_HEIGHT + LOBBY_ROW_HEIGHT)
 
 const TURN_RATE = 0.035 // radians per tick
 
@@ -107,12 +107,12 @@ const KEYUP_Q =                  (KEYDOWN_Q | KEYUP_BITMASK)
 
 // How the colors are used in the game (BGI color numbers, i.e. indices into palette):
 const CANVAS_COLOR = 0
-#define border_color(i) (7 - (i))
-#define player_color(id) (8 + (id))
+const border_color = (i) => (7 - (i))
+const player_color = (id) => (8 + (id))
 const SCOREBOARD_COLOR = 14
 const TEXT_COLOR = 15
 
-#define is_obstacle(x, y) (getpixel(x, y) > player_color(0) - 1) // likely intention: player colors; actual meaning: also scoreboard color (but not its border) and text
+const is_obstacle = (x, y) => (getpixel(x, y) > player_color(0) - 1) // likely intention: player colors; actual meaning: also scoreboard color (but not its border) and text
 
 int palette[16][3] = { // DS:00AA  6-bit VGA DAC R,G,B per BGI color
     { 0,  0,  0}, // CANVAS_COLOR (black)
