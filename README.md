@@ -10,5 +10,8 @@ This project translates [zatacka.cpp](https://github.com/SimonAlling/zatacka-dec
 - `int x;` is turned into `let x = 0;`.
 - `int arr[LENGTH];` is turned into `let arr = Array(LENGTH).fill(0);`.
 - `void *arr[LENGTH];` is turned into `let arr = Array(LENGTH);`.
+- `int x = a_float;` is turned into `let x = Math.trunc(a_float);`.
 - Inline `asm` is commented out.
 - Functions: The return type is replaced with the `function` keyword, and the parameter types are removed.
+- `label_name:` is turned into `function label_name() {` (with a matching `}`).
+- `goto label_name;` is turned into `return label_name();`.

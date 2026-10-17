@@ -238,30 +238,30 @@ function crashes_when_dx_is_not_zero(x, y, dy)
 }
 
 // CS:056F  accept the new pixel position of cur_player or kill it; every survivor scores
-void move_or_die(void)
+function move_or_die()
 {
-    int xi = x[cur_player]; // BUG: rounding toward zero ⇒ possible to be almost 1px outside left edge (but still draw entirely within canvas)
-    int yi = y[cur_player]; // BUG: rounding toward zero ⇒ possible to be almost 1px outside top edge (but still draw entirely within canvas)
-    int dx = xi - px[cur_player];
-    int dy = yi - py[cur_player];
-    int j;
+    let xi = Math.trunc(x[cur_player]); // BUG: rounding toward zero ⇒ possible to be almost 1px outside left edge (but still draw entirely within canvas)
+    let yi = Math.trunc(y[cur_player]); // BUG: rounding toward zero ⇒ possible to be almost 1px outside top edge (but still draw entirely within canvas)
+    let dx = xi - px[cur_player];
+    let dy = yi - py[cur_player];
+    let j;
 
     if (xi == -1 || xi == CANVAS_WIDTH - TWO || yi == -1 || yi == SCREEN_HEIGHT - TWO)
-        goto label_die;
+        return label_die();
     if (dx < 0) {
-        if (crashes_when_dx_is_not_zero(xi, yi, dy)) goto label_die;
+        if (crashes_when_dx_is_not_zero(xi, yi, dy)) return label_die();
     } else if (dx > 0) {
-        if (crashes_when_dx_is_not_zero(xi + TWO, yi, dy)) goto label_die;
+        if (crashes_when_dx_is_not_zero(xi + TWO, yi, dy)) return label_die();
     } else if (dy == -1) {
-        if (is_obstacle(xi, yi) || is_obstacle(xi + TWO, yi)) goto label_die;
+        if (is_obstacle(xi, yi) || is_obstacle(xi + TWO, yi)) return label_die();
     } else if (dy == 1) {
-        if (is_obstacle(xi, yi + TWO) || is_obstacle(xi + TWO, yi + TWO)) goto label_die;
+        if (is_obstacle(xi, yi + TWO) || is_obstacle(xi + TWO, yi + TWO)) return label_die();
     }
     px[cur_player] = xi;
     py[cur_player] = yi;
     return;
 
-label_die:
+function label_die() {
     dead[cur_player] = 1;
     alive_count--;
     for (j = 0; j < PLAYER_COUNT; j++)
@@ -272,6 +272,7 @@ label_die:
             setcolor(player_color(j));
             draw_int_text(CANVAS_WIDTH + BORDER_WIDTH + SCORE_MARGIN, loop_i, ++score[j]);
         }
+}
 }
 
 // CS:06FC
