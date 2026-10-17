@@ -276,15 +276,15 @@ function label_die() {
 }
 
 // CS:06FC
-void main(void)
+function main()
 {
-    int gdriver = VGA, gmode = VGAHI; // 640x480x16
-    int errorcode;
-    struct palettetype pal;
-    unsigned size;
-    register int xi, yi;
+    const gdriver = VGA, gmode = VGAHI; // 640x480x16
+    let errorcode = 0;
+    let pal = {};
+    let size;
+    let xi = 0, yi = 0;
 
-    initgraph(&gdriver, &gmode, ""); // look for EGAVGA.BGI in current directory
+    initgraph(gdriver, gmode, ""); // look for EGAVGA.BGI in current directory
     errorcode = graphresult();
     if (errorcode != grOk) {
         printf("Graphics error: %s\n", grapherrormsg(errorcode));
@@ -303,7 +303,7 @@ void main(void)
     setvect(KEYBOARD_INTERRUPT, keyboard_isr);
 
     // Initialize BGI palette:
-    getpalette(&pal);
+    getpalette(pal);
     for (loop_i = 0; loop_i < pal.size; loop_i++)
         setrgbpalette(pal.colors[loop_i], palette[loop_i][0], palette[loop_i][1], palette[loop_i][2]); // BGI color i gets the RGB values in palette[i]
 
@@ -322,8 +322,9 @@ void main(void)
     }
     setfillstyle(SOLID_FILL, CANVAS_COLOR);
     bar(0, 0, TWO, TWO); // restore scratchpad
+    return label_splash();
 
-label_splash: // CS:08B9
+function label_splash() { // CS:08B9
     clear_screen_color(CANVAS_COLOR);
     setcolor(TEXT_COLOR);
     settextstyle(TSCR_FONT, HORIZ_DIR, USER_CHAR_SIZE);
@@ -339,7 +340,7 @@ label_splash: // CS:08B9
     }
     delay(1000);
     while (!key_space)
-        if (key_esc) goto label_quit;
+        if (key_esc) return label_quit();
 
     // lobby: left key joins, right key leaves; SPACE starts with at least 2 players
     clear_screen_color(CANVAS_COLOR);
@@ -352,7 +353,7 @@ label_splash: // CS:08B9
     setcolor(player_color(ID_BLUE));   outtextxy(LOBBY_CONTROLS_X, lobby_row_y(ID_BLUE), TEXT_CONTROLS_BLUE);
     settextstyle(DEFAULT_FONT, HORIZ_DIR, CHAR_SIZE_16X16);
     do {
-        if (key_esc) goto label_quit;
+        if (key_esc) return label_quit();
         for (loop_i = 0; loop_i < KEYBOARD_PLAYER_COUNT; loop_i++) {
             if (keyL[loop_i] && !joined[loop_i]) {
                 joined[loop_i] = 1;
@@ -388,8 +389,10 @@ label_splash: // CS:08B9
         }
     } while (!key_space || participating_count <= 1);
     settextstyle(TSCR_FONT, HORIZ_DIR, USER_CHAR_SIZE); // the user char size from the splash screen still applies
+    return label_round();
+}
 
-label_round: // CS:0BDD
+function label_round() { // CS:0BDD
     clear_screen_color(CANVAS_COLOR);
 
     // Draw scoreboard:
@@ -441,7 +444,7 @@ label_round: // CS:0BDD
             // Update pixel position:
             move_or_die();
             if (alive_count == 1)
-                goto label_round_over;
+                return label_round_over();
 
             // Update hole status and draw:
             if (holecycle_countdown[cur_player] > hole_ticks[cur_player]) { // solid (head leaves permanent trail)
@@ -473,13 +476,14 @@ label_round: // CS:0BDD
         }
         delay(15 - alive_count / 2); // fewer players alive: longer frames
     }
+}
 
-label_round_over: // CS:1125
+function label_round_over() { // CS:1125
     for (loop_i = 0; loop_i < PLAYER_COUNT; loop_i++) {
         if (score[loop_i] > score_to_win(participating_count) - 1) {
             while (!key_space) // no ESC check here
                 ;
-            goto label_game_over;
+            return label_game_over();
         }
         if (joined[loop_i])
             dead[loop_i] = 0;
@@ -487,10 +491,11 @@ label_round_over: // CS:1125
     alive_count = participating_count;
     delay(1000);
     while (!key_space)
-        if (key_esc) goto label_splash; // ESC between rounds: back to splash screen
-    goto label_round;
+        if (key_esc) return label_splash(); // ESC between rounds: back to splash screen
+    return label_round();
+}
 
-label_game_over: // CS:119B
+function label_game_over() { // CS:119B
     clear_screen_color(CANVAS_COLOR);
     setcolor(TEXT_COLOR);
     outtextxy(180, 400, TEXT_GAME_OVER);
@@ -502,10 +507,11 @@ label_game_over: // CS:119B
         }
     delay(1000);
     while (!key_space)
-        if (key_esc) goto label_quit;
-    goto label_splash;
+        if (key_esc) return label_quit();
+    return label_splash();
+}
 
-label_quit: // CS:123F
+function label_quit() { // CS:123F
     for (loop_i = 0; loop_i < PLAYER_COUNT; loop_i++) {
         free(img_head[loop_i]);
         free(img_bg[loop_i]);
@@ -513,4 +519,5 @@ label_quit: // CS:123F
     setvect(KEYBOARD_INTERRUPT, old_keyboard_isr);
     closegraph();
     exit(0);
+}
 }

@@ -15,3 +15,4 @@ This project translates [zatacka.cpp](https://github.com/SimonAlling/zatacka-dec
 - Functions: The return type is replaced with the `function` keyword, and the parameter types are removed.
 - `label_name:` is turned into `function label_name() {` (with a matching `}`).
 - `goto label_name;` is turned into `return label_name();`.
+- Extra `return label_name();` are inserted where the code previously fell into the next labelled block.
