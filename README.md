@@ -4,7 +4,7 @@
 
 This project translates [zatacka.cpp](https://github.com/SimonAlling/zatacka-decomp/blob/17d557f4b54ac55b0dd05ae0827be1f5e9ff9f52/zatacka.cpp) into [zatacka.js](zatacka.js).
 
-- `#include` is commented out.
+- `#include file.h` is commented out and substituted with `<script src="file.js"></script>` in [index.html](./index.html). `file.js` implements what’s needed to run the game, not the library in full.
 - `#define CONSTANT value` is turned into `const CONSTANT = value`.
 - `#define macro(x, y) (x + y)` is turned into `const macro = (x, y) => (x + y)`.
 - `int x;` is turned into `let x = 0;`.
