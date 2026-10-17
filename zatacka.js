@@ -162,9 +162,9 @@ let old_keyboard_isr;                                   // DS:0FC6
 
 // CS:02C2  read the scancode, set (make code) or clear (break code) the flag
 // should only write to `volatile` variables, or a modern compiler might optimize `while (…)` into an infinite loop (Borland C++ 3.1 doesn't)
-void interrupt keyboard_isr(...)
+function keyboard_isr()
 {
-    unsigned char scancode = inportb(KEYBOARD_IO_PORT);
+    const scancode = inportb(KEYBOARD_IO_PORT);
 
     switch (scancode) {
     case KEYDOWN_ESC:             key_esc = 1; break;
