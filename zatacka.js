@@ -1,15 +1,9 @@
 /**
- * Reconstructed source of "Achtung, die Kurve!" for MS-DOS (ZATACKA.EXE)
+ * JavaScript translation of the reconstructed C++ source of "Achtung, die Kurve!" for MS-DOS (ZATACKA.EXE),
+ * which was crafted by Simon Alling and Simon Lydell with Claude Opus 5.5 from a disassembly of the original binary.
+ * The JavaScript translation was done by Simon Lydell.
  *
- * Crafted by Simon Alling and Simon Lydell with Claude Opus 5.5 from a disassembly of the original binary.
- *
- * Addresses in the comments are offsets into the original's code segment (CS:xxxx, the game code is CS:02C2..CS:12B5) and DGROUP (DS:xxxx); unlike CS/DS, offsets do not depend on where DOS loads the program.
- *
- * Compiling with Borland C++ 3.1 (e.g. in headless DOSBox) reproduces ZATACKA.EXE byte for byte:
- *
- *     BCC -ms -O2 -vi- -B ZATACKA.CPP GRAPHICS.LIB
- *
- * Compiled executable expects EGAVGA.BGI and TSCR.CHR in the current directory.
+ * Source: https://github.com/SimonAlling/zatacka-decomp/blob/17d557f4b54ac55b0dd05ae0827be1f5e9ff9f52/zatacka.cpp
  */
 #include <graphics.h>
 #include <stdlib.h>
