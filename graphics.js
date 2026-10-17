@@ -49,6 +49,8 @@ function initgraph(gdriver, gmode, egavgabgi_path) {
         return;
     }
 
+    canvas.style.imageRendering = "pixelated";
+
     // Ugly hack: Read zatacka.js’ constants to define the screen size.
     // This allows modding the screen size more easily.
     canvas.width = typeof SCREEN_WIDTH === "number" ? SCREEN_WIDTH : 640;
