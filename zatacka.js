@@ -339,8 +339,14 @@ async function label_splash() { // CS:08B9
         joined[loop_i] = 0;
     }
     await delay(1000);
-    while (!key_space)
-        if (key_esc) return label_quit();
+    switch (await wait_for_input(() => {
+        if (key_space) return true;
+        if (key_esc) return label_quit;
+        return false;
+    })) {
+    case label_quit:
+        return label_quit();
+    };
 
     // lobby: left key joins, right key leaves; SPACE starts with at least 2 players
     clear_screen_color(CANVAS_COLOR);
@@ -352,8 +358,8 @@ async function label_splash() { // CS:08B9
     setcolor(player_color(ID_PINK));   outtextxy(LOBBY_CONTROLS_X, lobby_row_y(ID_PINK), TEXT_CONTROLS_PINK);
     setcolor(player_color(ID_BLUE));   outtextxy(LOBBY_CONTROLS_X, lobby_row_y(ID_BLUE), TEXT_CONTROLS_BLUE);
     settextstyle(DEFAULT_FONT, HORIZ_DIR, CHAR_SIZE_16X16);
-    do {
-        if (key_esc) return label_quit();
+    switch (await wait_for_input(() => {
+        if (key_esc) return label_quit;
         for (loop_i = 0; loop_i < KEYBOARD_PLAYER_COUNT; loop_i++) {
             if (keyL[loop_i] && !joined[loop_i]) {
                 joined[loop_i] = 1;
@@ -387,7 +393,12 @@ async function label_splash() { // CS:08B9
             alive_count--;
             participating_count--;
         }
-    } while (!key_space || participating_count <= 1);
+        if (key_space && participating_count > 1) return true;
+        return false;
+    })) {
+    case label_quit:
+        return label_quit();
+    };
     settextstyle(TSCR_FONT, HORIZ_DIR, USER_CHAR_SIZE); // the user char size from the splash screen still applies
     return label_round();
 }
@@ -481,8 +492,7 @@ async function label_round() { // CS:0BDD
 async function label_round_over() { // CS:1125
     for (loop_i = 0; loop_i < PLAYER_COUNT; loop_i++) {
         if (score[loop_i] > score_to_win(participating_count) - 1) {
-            while (!key_space) // no ESC check here
-                ;
+            await wait_for_input(() => key_space); // no ESC check here
             return label_game_over();
         }
         if (joined[loop_i])
@@ -490,8 +500,14 @@ async function label_round_over() { // CS:1125
     }
     alive_count = participating_count;
     await delay(1000);
-    while (!key_space)
-        if (key_esc) return label_splash(); // ESC between rounds: back to splash screen
+    switch (await wait_for_input(() => {
+        if (key_space) return true;
+        if (key_esc) return label_splash; // ESC between rounds: back to splash screen
+        return false;
+    })) {
+    case label_splash:
+        return label_splash();
+    };
     return label_round();
 }
 
@@ -506,8 +522,14 @@ async function label_game_over() { // CS:119B
             draw_int_text(250, loop_i * 40 + 80, score[loop_i]);
         }
     await delay(1000);
-    while (!key_space)
-        if (key_esc) return label_quit();
+    switch (await wait_for_input(() => {
+        if (key_space) return true;
+        if (key_esc) return label_quit;
+        return false;
+    })) {
+    case label_quit:
+        return label_quit();
+    };
     return label_splash();
 }
 

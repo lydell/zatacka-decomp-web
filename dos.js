@@ -1,7 +1,9 @@
 // PRIVATE SECTION
 
 let __b = 0;
-let __vect = () => {};
+let __noop = () => {};
+let __vect = __noop;
+let __waiting = __noop;
 
 window.addEventListener("keydown", (event) => {
     if (__vect !== __noop) {
@@ -9,6 +11,7 @@ window.addEventListener("keydown", (event) => {
     }
     __b = __scancode(event.code);
     __vect();
+    __waiting();
 });
 
 window.addEventListener("keyup", (event) => {
@@ -17,6 +20,7 @@ window.addEventListener("keyup", (event) => {
     }
     __b = __scancode(event.code) | 0x80;
     __vect();
+    __waiting();
 });
 
 // Sources:
@@ -120,6 +124,7 @@ window.addEventListener("mousedown", (event) => {
         event.preventDefault();
     }
     __bx = event.buttons;
+    __waiting();
 });
 
 window.addEventListener("mouseup", (event) => {
@@ -127,6 +132,7 @@ window.addEventListener("mouseup", (event) => {
         event.preventDefault();
     }
     __bx = event.buttons;
+    __waiting();
 });
 
 
@@ -181,4 +187,22 @@ function setvect(interrupt, isr) {
 
 function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// Extension for JavaScript, since we can’t do things like `while (!key_space);` there.
+function wait_for_input(f) {
+    const { promise, resolve, reject } = Promise.withResolvers();
+    if (__waiting === __noop) {
+        __waiting = () => {
+            const ret = f();
+            if (ret) {
+                __waiting = __noop;
+                resolve(ret);
+            }
+        };
+        __waiting();
+    } else {
+        reject(new Error("Already waiting for input"));
+    }
+    return promise;
 }

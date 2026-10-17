@@ -17,3 +17,4 @@ This project translates [zatacka.cpp](https://github.com/SimonAlling/zatacka-dec
 - `goto label_name;` is turned into `return label_name();`.
 - Extra `return label_name();` are inserted where the code previously fell into the next labelled block.
 - `delay(ms);` is turned into `await delay(ms);`
+- `while (!key_space);` is turned into `await wait_for_input(() => key_space);`.
