@@ -1,1 +1,3 @@
-function getch() {}
+function getch() {
+    // Do nothing.
+}
