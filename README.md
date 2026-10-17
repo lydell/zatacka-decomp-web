@@ -10,3 +10,4 @@ This project translates [zatacka.cpp](https://github.com/SimonAlling/zatacka-dec
 - `int x;` is turned into `let x = 0;`.
 - `int arr[LENGTH];` is turned into `let arr = Array(LENGTH).fill(0);`.
 - `void *arr[LENGTH];` is turned into `let arr = Array(LENGTH);`.
+- Inline `asm` is commented out.

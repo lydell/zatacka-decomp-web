@@ -194,9 +194,9 @@ function keyboard_isr()
     case KEYUP_Q:                 keyR[ID_RED] = 0; break;
     }
 
-    // Acknowledge IRQ 1: send EOI to the master PIC.  Inline asm because outportb() would load the port into DX; the original uses the immediate-port form of OUT.
-    asm mov al, PIC_EOI
-    asm out PIC_COMMAND_PORT, al
+    // Acknowledge IRQ 1: send EOI to the master PIC.  Inline // asm because outportb() would load the port into DX; the original uses the immediate-port form of OUT.
+    // asm mov al, PIC_EOI
+    // asm out PIC_COMMAND_PORT, al
 }
 
 // CS:048A  score text with the current color/font
@@ -293,9 +293,9 @@ void main(void)
     }
 
     // Configure overscan border:
-    asm mov ax, VIDEO_SET_OVERSCAN_COLOR
-    asm mov bh, OVERSCAN_BORDER_COLOR_RAW_DAC_INDEX // probably meant scoreboard color; actually shows the BIOS default for DAC 14 (probably EGA 001110, which is yellow; can be seen when running native/unemulated on a CRT)
-    asm int VIDEO_INTERRUPT
+    // asm mov ax, VIDEO_SET_OVERSCAN_COLOR
+    // asm mov bh, OVERSCAN_BORDER_COLOR_RAW_DAC_INDEX // probably meant scoreboard color; actually shows the BIOS default for DAC 14 (probably EGA 001110, which is yellow; can be seen when running native/unemulated on a CRT)
+    // asm int VIDEO_INTERRUPT
 
     // Setup keyboard ISR:
     old_keyboard_isr = getvect(KEYBOARD_INTERRUPT);
