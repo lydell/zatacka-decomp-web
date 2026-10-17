@@ -1,3 +1,13 @@
+const VGA = Symbol("VGA");
+const VGAHI = Symbol("VGAHI");
+const grOk = 0;
+const SOLID_FILL = Symbol("SOLID_FILL");
+const COPY_PUT = Symbol("COPY_PUT");
+const DEFAULT_FONT = Symbol("DEFAULT_FONT");
+const TRIPLEX_SCR_FONT = Symbol("TRIPLEX_SCR_FONT");
+const HORIZ_DIR = Symbol("HORIZ_DIR");
+const USER_CHAR_SIZE = Symbol("USER_CHAR_SIZE");
+
 // PRIVATE SECTION
 
 let __graphresult = 1;
@@ -20,16 +30,6 @@ function __key(x, y) {
 }
 
 // PRIVATE SECTION END
-
-const VGA = Symbol("VGA");
-const VGAHI = Symbol("VGAHI");
-const grOk = 0;
-const SOLID_FILL = Symbol("SOLID_FILL");
-const COPY_PUT = Symbol("COPY_PUT");
-const DEFAULT_FONT = Symbol("DEFAULT_FONT");
-const TRIPLEX_SCR_FONT = Symbol("TRIPLEX_SCR_FONT");
-const HORIZ_DIR = Symbol("HORIZ_DIR");
-const USER_CHAR_SIZE = Symbol("USER_CHAR_SIZE");
 
 function initgraph(gdriver, gmode, egavgabgi_path) {
     if (gdriver !== VGA) {
