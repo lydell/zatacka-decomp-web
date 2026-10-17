@@ -133,32 +133,32 @@ const palette = [ // DS:00AA  6-bit VGA DAC R,G,B per BGI color
     [63, 63, 63], // TEXT_COLOR (white)
 ];
 
-volatile int key_esc;                                   // DS:0EBE
-volatile int key_space;                                 // DS:0EC0
-int unused_0EC2[12];                                    // DS:0EC2  24 bytes never referenced by the game code; type unknown
-int mouse_left;                                         // DS:0EDA  nonzero while the left or middle button is down (mouse buttons with the right bit cleared)
-int mouse_right;                                        // DS:0EDC  nonzero while the right or middle button is down (mouse buttons with the left bit cleared)
-int px[PLAYER_COUNT];                                   // DS:0EDE  head pixel x (left column of the 3x3) after the last accepted move
-int py[PLAYER_COUNT];                                   // DS:0EEA  head pixel y (top row of the 3x3) after the last accepted move
-int hole_ticks[PLAYER_COUNT];                           // DS:0EF6  hole length in ticks
-int score[PLAYER_COUNT];                                // DS:0F02
-int joined[PLAYER_COUNT];                               // DS:0F0E
-int holecycle_countdown[PLAYER_COUNT];                  // DS:0F1A  counts down: solid while > hole_ticks, then hole until 0, where both are re-rolled
-int dead[PLAYER_COUNT];                                 // DS:0F26  1 = dead or not playing
-volatile int keyL[KEYBOARD_PLAYER_COUNT];               // DS:0F32
-volatile int keyR[KEYBOARD_PLAYER_COUNT];               // DS:0F3C
-int prev_px[PLAYER_COUNT];                              // DS:0F46  px before this tick
-int prev_py[PLAYER_COUNT];                              // DS:0F52  py before this tick
-int alive_count;                                        // DS:0F5E
-int participating_count;                                // DS:0F60
-int cur_player;                                         // DS:0F62
-int loop_i;                                             // DS:0F64  scratch loop variable
-float x[PLAYER_COUNT];                                  // DS:0F66  exact head position; px is the truncated value
-float y[PLAYER_COUNT];                                  // DS:0F7E  exact head position; py is the truncated value
-float dir[PLAYER_COUNT];                                // DS:0F96  direction in radians (0 = down, grows counter-clockwise)
-void *img_head[PLAYER_COUNT];                           // DS:0FAE  3x3 image in each player's color
-void *img_bg[PLAYER_COUNT];                             // DS:0FBA  background under the head; malloc'd, never initialized
-void interrupt (*old_keyboard_isr)(...);                // DS:0FC6
+let key_esc = 0;                                        // DS:0EBE
+let key_space = 0;                                      // DS:0EC0
+let unused_0EC2 = Array(12).fill(0);                    // DS:0EC2  24 bytes never referenced by the game code; type unknown
+let mouse_left = 0;                                     // DS:0EDA  nonzero while the left or middle button is down (mouse buttons with the right bit cleared)
+let mouse_right = 0;                                    // DS:0EDC  nonzero while the right or middle button is down (mouse buttons with the left bit cleared)
+let px = Array(PLAYER_COUNT).fill(0);                   // DS:0EDE  head pixel x (left column of the 3x3) after the last accepted move
+let py = Array(PLAYER_COUNT).fill(0);                   // DS:0EEA  head pixel y (top row of the 3x3) after the last accepted move
+let hole_ticks = Array(PLAYER_COUNT).fill(0);           // DS:0EF6  hole length in ticks
+let score = Array(PLAYER_COUNT).fill(0);                // DS:0F02
+let joined = Array(PLAYER_COUNT).fill(0);               // DS:0F0E
+let holecycle_countdown = Array(PLAYER_COUNT).fill(0);  // DS:0F1A  counts down: solid while > hole_ticks, then hole until 0, where both are re-rolled
+let dead = Array(PLAYER_COUNT).fill(0);                 // DS:0F26  1 = dead or not playing
+let keyL = Array(KEYBOARD_PLAYER_COUNT).fill(0);        // DS:0F32
+let keyR = Array(KEYBOARD_PLAYER_COUNT).fill(0);        // DS:0F3C
+let prev_px = Array(PLAYER_COUNT).fill(0);              // DS:0F46  px before this tick
+let prev_py = Array(PLAYER_COUNT).fill(0);              // DS:0F52  py before this tick
+let alive_count = 0;                                    // DS:0F5E
+let participating_count = 0;                            // DS:0F60
+let cur_player = 0;                                     // DS:0F62
+let loop_i = 0;                                         // DS:0F64  scratch loop variable
+let x = Array(PLAYER_COUNT).fill(0);                    // DS:0F66  exact head position; px is the truncated value
+let y = Array(PLAYER_COUNT).fill(0);                    // DS:0F7E  exact head position; py is the truncated value
+let dir = Array(PLAYER_COUNT).fill(0);                  // DS:0F96  direction in radians (0 = down, grows counter-clockwise)
+let img_head = Array(PLAYER_COUNT);                     // DS:0FAE  3x3 image in each player's color
+let img_bg = Array(PLAYER_COUNT);                       // DS:0FBA  background under the head; malloc'd, never initialized
+let old_keyboard_isr;                                   // DS:0FC6
 
 // CS:02C2  read the scancode, set (make code) or clear (break code) the flag
 // should only write to `volatile` variables, or a modern compiler might optimize `while (…)` into an infinite loop (Borland C++ 3.1 doesn't)
