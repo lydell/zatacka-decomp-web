@@ -114,24 +114,24 @@ const TEXT_COLOR = 15
 
 const is_obstacle = (x, y) => (getpixel(x, y) > player_color(0) - 1) // likely intention: player colors; actual meaning: also scoreboard color (but not its border) and text
 
-int palette[16][3] = { // DS:00AA  6-bit VGA DAC R,G,B per BGI color
-    { 0,  0,  0}, // CANVAS_COLOR (black)
-    { 8,  8,  8}, // unused
-    {12, 12, 12}, // unused
-    {16, 16, 16}, // unused
-    {20, 20, 20}, // border_color(3)
-    {24, 24, 24}, // border_color(2)
-    {28, 28, 28}, // border_color(1)
-    {32, 32, 32}, // border_color(0)
-    {63, 10,  0}, // player_color(ID_RED)
-    {48, 48,  0}, // player_color(ID_YELLOW)
-    {63, 30,  0}, // player_color(ID_ORANGE)
-    { 0, 50,  0}, // player_color(ID_GREEN)
-    {55, 20, 45}, // player_color(ID_PINK)
-    { 0, 40, 50}, // player_color(ID_BLUE)
-    {15, 15, 15}, // SCOREBOARD_COLOR (gray)
-    {63, 63, 63}, // TEXT_COLOR (white)
-};
+const palette = [ // DS:00AA  6-bit VGA DAC R,G,B per BGI color
+    [ 0,  0,  0], // CANVAS_COLOR (black)
+    [ 8,  8,  8], // unused
+    [12, 12, 12], // unused
+    [16, 16, 16], // unused
+    [20, 20, 20], // border_color(3)
+    [24, 24, 24], // border_color(2)
+    [28, 28, 28], // border_color(1)
+    [32, 32, 32], // border_color(0)
+    [63, 10,  0], // player_color(ID_RED)
+    [48, 48,  0], // player_color(ID_YELLOW)
+    [63, 30,  0], // player_color(ID_ORANGE)
+    [ 0, 50,  0], // player_color(ID_GREEN)
+    [55, 20, 45], // player_color(ID_PINK)
+    [ 0, 40, 50], // player_color(ID_BLUE)
+    [15, 15, 15], // SCOREBOARD_COLOR (gray)
+    [63, 63, 63], // TEXT_COLOR (white)
+];
 
 volatile int key_esc;                                   // DS:0EBE
 volatile int key_space;                                 // DS:0EC0
