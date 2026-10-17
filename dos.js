@@ -178,3 +178,7 @@ function setvect(interrupt, isr) {
         throw new Error(`Unrecognized interrupt: ${interrupt}`);
     }
 }
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}

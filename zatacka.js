@@ -324,7 +324,7 @@ function main()
     bar(0, 0, TWO, TWO); // restore scratchpad
     return label_splash();
 
-function label_splash() { // CS:08B9
+async function label_splash() { // CS:08B9
     clear_screen_color(CANVAS_COLOR);
     setcolor(TEXT_COLOR);
     settextstyle(TSCR_FONT, HORIZ_DIR, USER_CHAR_SIZE);
@@ -338,7 +338,7 @@ function label_splash() { // CS:08B9
         score[loop_i] = 0;
         joined[loop_i] = 0;
     }
-    delay(1000);
+    await delay(1000);
     while (!key_space)
         if (key_esc) return label_quit();
 
@@ -392,7 +392,7 @@ function label_splash() { // CS:08B9
     return label_round();
 }
 
-function label_round() { // CS:0BDD
+async function label_round() { // CS:0BDD
     clear_screen_color(CANVAS_COLOR);
 
     // Draw scoreboard:
@@ -423,9 +423,9 @@ function label_round() { // CS:0BDD
             py[cur_player] = prev_py[cur_player] = yi;
             for (loop_i = 0; loop_i < SPAWN_FLICKER_COUNT; loop_i++) { // blink the start position
                 putimage(px[cur_player], py[cur_player], img_head[cur_player], COPY_PUT);
-                delay(50);
+                await delay(50);
                 bar(px[cur_player], py[cur_player], px[cur_player] + TWO, py[cur_player] + TWO);
-                delay(50);
+                await delay(50);
             }
             putimage(px[cur_player], py[cur_player], img_head[cur_player], COPY_PUT);
             dir[cur_player] = random(31415) / 10000.0; // random direction in [0, pi) – never westward
@@ -474,11 +474,11 @@ function label_round() { // CS:0BDD
                 if (mouse_right) dir[cur_player] = dir[cur_player] - TURN_RATE;
             }
         }
-        delay(15 - alive_count / 2); // fewer players alive: longer frames
+        await delay(15 - alive_count / 2); // fewer players alive: longer frames
     }
 }
 
-function label_round_over() { // CS:1125
+async function label_round_over() { // CS:1125
     for (loop_i = 0; loop_i < PLAYER_COUNT; loop_i++) {
         if (score[loop_i] > score_to_win(participating_count) - 1) {
             while (!key_space) // no ESC check here
@@ -489,13 +489,13 @@ function label_round_over() { // CS:1125
             dead[loop_i] = 0;
     }
     alive_count = participating_count;
-    delay(1000);
+    await delay(1000);
     while (!key_space)
         if (key_esc) return label_splash(); // ESC between rounds: back to splash screen
     return label_round();
 }
 
-function label_game_over() { // CS:119B
+async function label_game_over() { // CS:119B
     clear_screen_color(CANVAS_COLOR);
     setcolor(TEXT_COLOR);
     outtextxy(180, 400, TEXT_GAME_OVER);
@@ -505,7 +505,7 @@ function label_game_over() { // CS:119B
             setcolor(player_color(loop_i));
             draw_int_text(250, loop_i * 40 + 80, score[loop_i]);
         }
-    delay(1000);
+    await delay(1000);
     while (!key_space)
         if (key_esc) return label_quit();
     return label_splash();

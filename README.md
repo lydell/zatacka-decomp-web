@@ -16,3 +16,4 @@ This project translates [zatacka.cpp](https://github.com/SimonAlling/zatacka-dec
 - `label_name:` is turned into `function label_name() {` (with a matching `}`).
 - `goto label_name;` is turned into `return label_name();`.
 - Extra `return label_name();` are inserted where the code previously fell into the next labelled block.
+- `delay(ms);` is turned into `await delay(ms);`
