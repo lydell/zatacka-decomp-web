@@ -18,3 +18,5 @@ This project translates [zatacka.cpp](https://github.com/SimonAlling/zatacka-dec
 - Extra `return label_name();` are inserted where the code previously fell into the next labelled block.
 - `delay(ms);` is turned into `await delay(ms);`
 - `while (!key_space);` is turned into `await wait_for_input(() => key_space);`.
+
+The goal of this project is to make the original C++ code run in the browser with as few changes as possible. When actually playing the game, I recommend [kurve.se](https://kurve.se/), which is a faithful re-implementation with multiple quality of life tweaks.
