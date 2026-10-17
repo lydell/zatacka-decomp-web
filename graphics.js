@@ -18,6 +18,8 @@ let __size = 1;
 let __scale_x = 1;
 let __scale_y = 1;
 let __ctx = null;
+let __offscreen = new OffscreenCanvas(0, 0);
+let __octx = __offscreen.getContext("2d");
 let __pixels = new Map();
 let __pal = Array.from({ length: 16 }, () => ({ r: 0, g: 0, b: 0 }));
 
@@ -120,6 +122,33 @@ const __default_font = {
     "~": [15214, 0],
 };
 
+const __all_images = [];
+
+function __image(src) {
+    const image = new Image();
+    image.src = src;
+    __all_images.push(new Promise((resolve, reject) => {
+        image.onload = resolve;
+        image.onerror = reject;
+    }));
+    return image;
+}
+
+const __achtung_die_kurve = __image("font/achtung-die-kurve.png");
+const __konec_hry = __image("font/konec-hry.png");
+const __digits_large = __image("font/digits-large.png");
+
+function __draw_image(image, x, y, width = image.width, dx = 0) {
+    const height = image.height;
+    __offscreen.width = width;
+    __offscreen.height = height;
+    __octx.drawImage(image, dx, 0, width, height, 0, 0, width, height);
+    __octx.globalCompositeOperation = "source-in";
+    __octx.fillStyle = __color_to_string(__pal[__color]);
+    __octx.fillRect(0, 0, width, height);
+    __ctx.drawImage(__offscreen, x, y);
+}
+
 function __color64to256(v) {
     return Math.round(v / 63 * 255);
 }
@@ -134,7 +163,7 @@ function __key(x, y) {
 
 // PRIVATE SECTION END
 
-function initgraph(gdriver, gmode, egavgabgi_path) {
+async function initgraph(gdriver, gmode, egavgabgi_path) {
     if (gdriver !== VGA) {
         __graphresult = 2;
         return;
@@ -161,8 +190,15 @@ function initgraph(gdriver, gmode, egavgabgi_path) {
 
     __ctx = canvas.getContext("2d", { alpha: false });
 
-    if (__ctx === null) {
+    if (__ctx === null || __octx === null) {
         __graphresult = 5;
+        return;
+    }
+
+    try {
+        await Promise.all(__all_images);
+    } catch {
+        __graphresult = 6;
         return;
     }
 
@@ -180,6 +216,7 @@ function grapherrormsg(errorcode) {
     case 3:  return "Only VGAHI mode is supported";
     case 4:  return "Not connected to a screen";
     case 5:  return "2D graphics not supported";
+    case 6:  return "Loading images failed";
     default: return "Unknown error";
     }
 }
@@ -277,7 +314,24 @@ function putimage(x, y, buffer, mode) {
 function outtextxy(xi, yi, text) {
     switch (__font) {
     case TRIPLEX_SCR_FONT:
-        // TODO: Falling through to the default font for now.
+        if (__size === USER_CHAR_SIZE && __scale_x === 1.5 && __scale_y === 2) {
+            const string = Array.isArray(text) ? text.filter(c => c !== 0).join("") : text;
+            if (string === "Achtung, die Kurve !") {
+                __draw_image(__achtung_die_kurve, xi, yi);
+                break;
+            } else if (string === "KONEC HRY") {
+                __draw_image(__konec_hry, xi, yi);
+                break;
+            } else if (/^\d+$/.test(string)) {
+                for (let char_index = 0; char_index < string.length; char_index++) {
+                    const char = string[char_index];
+                    const num = Number(char);
+                    __draw_image(__digits_large, xi + char_index * 28, yi, 28, num * 28);
+                }
+                break;
+            }
+        }
+        // Fall through to the default font.
     case DEFAULT_FONT:
         __ctx.fillStyle = __color_to_string(__pal[__color]);
         const scale_x = __size === USER_CHAR_SIZE ? __scale_x : __size;

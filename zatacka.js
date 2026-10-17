@@ -276,7 +276,7 @@ function label_die() {
 }
 
 // CS:06FC
-function main()
+async function main()
 {
     const gdriver = VGA, gmode = VGAHI; // 640x480x16
     let errorcode = 0;
@@ -284,7 +284,7 @@ function main()
     let size;
     let xi = 0, yi = 0;
 
-    initgraph(gdriver, gmode, ""); // look for EGAVGA.BGI in current directory
+    await initgraph(gdriver, gmode, ""); // look for EGAVGA.BGI in current directory
     errorcode = graphresult();
     if (errorcode != grOk) {
         printf("Graphics error: %s\n", grapherrormsg(errorcode));
