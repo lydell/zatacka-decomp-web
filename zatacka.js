@@ -12,105 +12,105 @@
 // #include <dos.h>
 // #include <math.h>
 
-#define TSCR_FONT TRIPLEX_SCR_FONT // Triplex Script, font number 7 in Borland Graphics Interface
-#define CHAR_SIZE_8X8   1 // DEFAULT_FONT at scale 1: 8x8-pixel characters
-#define CHAR_SIZE_16X16 2 // DEFAULT_FONT at scale 2: 16x16-pixel characters
+const TSCR_FONT = TRIPLEX_SCR_FONT // Triplex Script, font number 7 in Borland Graphics Interface
+const CHAR_SIZE_8X8 =   1 // DEFAULT_FONT at scale 1: 8x8-pixel characters
+const CHAR_SIZE_16X16 = 2 // DEFAULT_FONT at scale 2: 16x16-pixel characters
 
-#define ID_RED 0
-#define ID_YELLOW 1
-#define ID_ORANGE 2
-#define ID_GREEN 3
-#define ID_PINK 4
-#define KEYBOARD_PLAYER_COUNT 5
-#define ID_BLUE 5 // uses mouse
-#define PLAYER_COUNT 6
+const ID_RED = 0
+const ID_YELLOW = 1
+const ID_ORANGE = 2
+const ID_GREEN = 3
+const ID_PINK = 4
+const KEYBOARD_PLAYER_COUNT = 5
+const ID_BLUE = 5 // uses mouse
+const PLAYER_COUNT = 6
 
-#define HOLECYCLE_COUNTDOWN_MIN   100
-#define HOLECYCLE_COUNTDOWN_RANGE 200 // countdown 100..299, i.e. cycles of 101..300 ticks
-#define HOLE_TICKS_MIN   7
-#define HOLE_TICKS_RANGE 5            // 7..11
+const HOLECYCLE_COUNTDOWN_MIN =   100
+const HOLECYCLE_COUNTDOWN_RANGE = 200 // countdown 100..299, i.e. cycles of 101..300 ticks
+const HOLE_TICKS_MIN =   7
+const HOLE_TICKS_RANGE = 5            // 7..11
 
-#define SPAWN_MARGIN 100
-#define SPAWN_FLICKER_COUNT 8
+const SPAWN_MARGIN = 100
+const SPAWN_FLICKER_COUNT = 8
 
-#define MIN_ROUNDS 10
+const MIN_ROUNDS = 10
 #define score_to_win(participants) (((participants) - 1) * MIN_ROUNDS)
 
-#define THE_THICKNESS 3
-#define TWO (THE_THICKNESS - 1)
+const THE_THICKNESS = 3
+const TWO = (THE_THICKNESS - 1)
 
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 480
-#define CANVAS_WIDTH 559
-#define BORDER_WIDTH 4
-#define SCORE_MARGIN 9
-#define SCORE_CLEAR_MARGIN 6
-#define SCORE_ROW_HEIGHT 80 // needs to be at least as large as the digit height
+const SCREEN_WIDTH = 640
+const SCREEN_HEIGHT = 480
+const CANVAS_WIDTH = 559
+const BORDER_WIDTH = 4
+const SCORE_MARGIN = 9
+const SCORE_CLEAR_MARGIN = 6
+const SCORE_ROW_HEIGHT = 80 // needs to be at least as large as the digit height
 
-#define LOBBY_CONTROLS_X 80
-#define LOBBY_READY_X 240
-#define LOBBY_READY_CLEAR_RIGHT 400
-#define LOBBY_ROW_HEIGHT 50
+const LOBBY_CONTROLS_X = 80
+const LOBBY_READY_X = 240
+const LOBBY_READY_CLEAR_RIGHT = 400
+const LOBBY_ROW_HEIGHT = 50
 #define lobby_row_y(id) ((id) * LOBBY_ROW_HEIGHT + LOBBY_ROW_HEIGHT)
 
-#define TURN_RATE 0.035 // radians per tick
+const TURN_RATE = 0.035 // radians per tick
 
-#define KEYBOARD_INTERRUPT 0x09 // interrupt vector number of the keyboard (IRQ 1, which the BIOS maps to vector 8 + 1)
-#define KEYBOARD_IO_PORT 0x60 // I/O port for keyboard scancodes
-#define PIC_COMMAND_PORT 0x20 // master 8259 PIC
-#define PIC_EOI          0x20 // end of interrupt (coincidentally equal to the port)
+const KEYBOARD_INTERRUPT = 0x09 // interrupt vector number of the keyboard (IRQ 1, which the BIOS maps to vector 8 + 1)
+const KEYBOARD_IO_PORT = 0x60 // I/O port for keyboard scancodes
+const PIC_COMMAND_PORT = 0x20 // master 8259 PIC
+const PIC_EOI =          0x20 // end of interrupt (coincidentally equal to the port)
 
-#define VIDEO_INTERRUPT                     0x10   // BIOS video services
-#define VIDEO_SET_OVERSCAN_COLOR            0x1001 // with this in AX, border (overscan) color is set to value in BH
-#define OVERSCAN_BORDER_COLOR_RAW_DAC_INDEX 14     // VGA DAC entry, not a BGI color: the game never sets DAC 14 (BGI color 14 is DAC 62)
+const VIDEO_INTERRUPT =                     0x10   // BIOS video services
+const VIDEO_SET_OVERSCAN_COLOR =            0x1001 // with this in AX, border (overscan) color is set to value in BH
+const OVERSCAN_BORDER_COLOR_RAW_DAC_INDEX = 14     // VGA DAC entry, not a BGI color: the game never sets DAC 14 (BGI color 14 is DAC 62)
 
-#define MOUSE_INTERRUPT    0x33 // mouse driver (MOUSE.COM etc.) services
-#define MOUSE_GET_STATUS   3    // function number in AX: returns the button bits in BX, the cursor position in CX, DX
-#define MOUSE_BUTTON_LEFT  1
-#define MOUSE_BUTTON_RIGHT 2
+const MOUSE_INTERRUPT =    0x33 // mouse driver (MOUSE.COM etc.) services
+const MOUSE_GET_STATUS =   3    // function number in AX: returns the button bits in BX, the cursor position in CX, DX
+const MOUSE_BUTTON_LEFT =  1
+const MOUSE_BUTTON_RIGHT = 2
 
-#define TEXT_SPLASH "Achtung, die Kurve !"
-#define TEXT_READY "READY"
-#define TEXT_CONTROLS_RED "(1 Q)"
-#define TEXT_CONTROLS_YELLOW "(L.Ctrl L.Alt)"
-#define TEXT_CONTROLS_ORANGE "(M ,)"
-#define TEXT_CONTROLS_GREEN "(L.Arrow D.Arrow)"
-#define TEXT_CONTROLS_PINK "(/ *)"
-#define TEXT_CONTROLS_BLUE "(L.Mouse R.Mouse)"
-#define TEXT_GAME_OVER "KONEC HRY"
+const TEXT_SPLASH = "Achtung, die Kurve !"
+const TEXT_READY = "READY"
+const TEXT_CONTROLS_RED = "(1 Q)"
+const TEXT_CONTROLS_YELLOW = "(L.Ctrl L.Alt)"
+const TEXT_CONTROLS_ORANGE = "(M ,)"
+const TEXT_CONTROLS_GREEN = "(L.Arrow D.Arrow)"
+const TEXT_CONTROLS_PINK = "(/ *)"
+const TEXT_CONTROLS_BLUE = "(L.Mouse R.Mouse)"
+const TEXT_GAME_OVER = "KONEC HRY"
 
-#define KEYUP_BITMASK            0x80
-#define KEYDOWN_ESC              0x01
-#define KEYUP_ESC                (KEYDOWN_ESC | KEYUP_BITMASK)
-#define KEYDOWN_SPACE            0x39
-#define KEYUP_SPACE              (KEYDOWN_SPACE | KEYUP_BITMASK)
-#define KEYDOWN_M                0x32
-#define KEYUP_M                  (KEYDOWN_M | KEYUP_BITMASK)
-#define KEYDOWN_COMMA            0x33
-#define KEYUP_COMMA              (KEYDOWN_COMMA | KEYUP_BITMASK)
-#define KEYDOWN_LEFT_CTRL        0x1D
-#define KEYUP_LEFT_CTRL          (KEYDOWN_LEFT_CTRL | KEYUP_BITMASK)
-#define KEYDOWN_LEFT_ALT         0x38
-#define KEYUP_LEFT_ALT           (KEYDOWN_LEFT_ALT | KEYUP_BITMASK)
-#define KEYDOWN_LEFT_ARROW       0x4B
-#define KEYUP_LEFT_ARROW         (KEYDOWN_LEFT_ARROW | KEYUP_BITMASK)
-#define KEYDOWN_DOWN_ARROW       0x50
-#define KEYUP_DOWN_ARROW         (KEYDOWN_DOWN_ARROW | KEYUP_BITMASK)
-#define KEYDOWN_NUMPAD_SLASH     0x35
-#define KEYUP_NUMPAD_SLASH       (KEYDOWN_NUMPAD_SLASH | KEYUP_BITMASK)
-#define KEYDOWN_NUMPAD_ASTERISK  0x37
-#define KEYUP_NUMPAD_ASTERISK    (KEYDOWN_NUMPAD_ASTERISK | KEYUP_BITMASK)
-#define KEYDOWN_1                0x02
-#define KEYUP_1                  (KEYDOWN_1 | KEYUP_BITMASK)
-#define KEYDOWN_Q                0x10
-#define KEYUP_Q                  (KEYDOWN_Q | KEYUP_BITMASK)
+const KEYUP_BITMASK =            0x80
+const KEYDOWN_ESC =              0x01
+const KEYUP_ESC =                (KEYDOWN_ESC | KEYUP_BITMASK)
+const KEYDOWN_SPACE =            0x39
+const KEYUP_SPACE =              (KEYDOWN_SPACE | KEYUP_BITMASK)
+const KEYDOWN_M =                0x32
+const KEYUP_M =                  (KEYDOWN_M | KEYUP_BITMASK)
+const KEYDOWN_COMMA =            0x33
+const KEYUP_COMMA =              (KEYDOWN_COMMA | KEYUP_BITMASK)
+const KEYDOWN_LEFT_CTRL =        0x1D
+const KEYUP_LEFT_CTRL =          (KEYDOWN_LEFT_CTRL | KEYUP_BITMASK)
+const KEYDOWN_LEFT_ALT =         0x38
+const KEYUP_LEFT_ALT =           (KEYDOWN_LEFT_ALT | KEYUP_BITMASK)
+const KEYDOWN_LEFT_ARROW =       0x4B
+const KEYUP_LEFT_ARROW =         (KEYDOWN_LEFT_ARROW | KEYUP_BITMASK)
+const KEYDOWN_DOWN_ARROW =       0x50
+const KEYUP_DOWN_ARROW =         (KEYDOWN_DOWN_ARROW | KEYUP_BITMASK)
+const KEYDOWN_NUMPAD_SLASH =     0x35
+const KEYUP_NUMPAD_SLASH =       (KEYDOWN_NUMPAD_SLASH | KEYUP_BITMASK)
+const KEYDOWN_NUMPAD_ASTERISK =  0x37
+const KEYUP_NUMPAD_ASTERISK =    (KEYDOWN_NUMPAD_ASTERISK | KEYUP_BITMASK)
+const KEYDOWN_1 =                0x02
+const KEYUP_1 =                  (KEYDOWN_1 | KEYUP_BITMASK)
+const KEYDOWN_Q =                0x10
+const KEYUP_Q =                  (KEYDOWN_Q | KEYUP_BITMASK)
 
 // How the colors are used in the game (BGI color numbers, i.e. indices into palette):
-#define CANVAS_COLOR 0
+const CANVAS_COLOR = 0
 #define border_color(i) (7 - (i))
 #define player_color(id) (8 + (id))
-#define SCOREBOARD_COLOR 14
-#define TEXT_COLOR 15
+const SCOREBOARD_COLOR = 14
+const TEXT_COLOR = 15
 
 #define is_obstacle(x, y) (getpixel(x, y) > player_color(0) - 1) // likely intention: player colors; actual meaning: also scoreboard color (but not its border) and text
 
