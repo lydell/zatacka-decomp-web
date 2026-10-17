@@ -19,4 +19,8 @@ This project translates [zatacka.cpp](https://github.com/SimonAlling/zatacka-dec
 - `delay(ms);` is turned into `await delay(ms);`
 - `while (!key_space);` is turned into `await wait_for_input(() => key_space);`.
 
+To see all changes compared to `zatacka.cpp`:
+
+    git diff --color-words='define|let|function|return|switch|while|do|goto|int|unsigned|struct|void|char|palettetype|PLAYER_ID|img_head|background under the head|image in each player|.' 814cfce228406e391163f80686a8ebd264de98d1... zatacka.js
+
 The goal of this project is to make the original C++ code run in the browser with as few changes as possible. When actually playing the game, I recommend [kurve.se](https://kurve.se/), which is a faithful re-implementation with multiple quality of life tweaks.
