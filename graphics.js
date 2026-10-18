@@ -187,6 +187,7 @@ async function initgraph(gdriver, gmode, egavgabgi_path) {
     // This allows modding the screen size more easily.
     canvas.width = typeof SCREEN_WIDTH === "number" ? SCREEN_WIDTH : 640;
     canvas.height = typeof SCREEN_HEIGHT === "number" ? SCREEN_HEIGHT : 480;
+    canvas.classList.add("sized");
 
     __ctx = canvas.getContext("2d", { alpha: false });
 
@@ -224,6 +225,7 @@ function grapherrormsg(errorcode) {
 function closegraph() {
     __ctx.clearRect(0, 0, __ctx.canvas.width, __ctx.canvas.height);
     __ctx = null;
+    __graphresult = 1;
 }
 
 function getpalette(pal) {

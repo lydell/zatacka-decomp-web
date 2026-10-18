@@ -7,8 +7,6 @@
  */
 // #include <graphics.h>
 // #include <stdlib.h>
-// #include <stdio.h>
-// #include <conio.h>
 // #include <dos.h>
 // #include <math.h>
 
@@ -288,8 +286,6 @@ async function main()
     errorcode = graphresult();
     if (errorcode != grOk) {
         printf("Graphics error: %s\n", grapherrormsg(errorcode));
-        printf("Press any key to halt:");
-        getch();
         exit(1);
     }
 

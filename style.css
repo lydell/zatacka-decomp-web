@@ -15,4 +15,12 @@ body {
     border: 16px ridge tan;
     border-radius: 2px;
     box-shadow: 0 200px 0 -100px tan, 0 200px 0 -98px #8c785d;
+    font-family: monospace;
+    color: white;
+    white-space: pre-wrap;
+
+    &:not(.sized) {
+        width: 640px;
+        height: 480px;
+    }
 }

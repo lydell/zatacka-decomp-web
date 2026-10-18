@@ -4,6 +4,18 @@
 // so every game run starts with seed 1 and uses the same random sequence.
 let __seed = 1;
 
+// Catch `exit` calls.
+window.addEventListener("unhandledrejection", (event) => {
+    if (typeof event.reason === "number") {
+        event.preventDefault();
+        printf(`Exit ${event.reason}\n`);
+        printf("Press any key to restart...\n");
+        window.addEventListener("keydown", () => {
+            window.location.reload();
+        })
+    }
+}, true);
+
 // PRIVATE SECTION END
 
 function malloc(size) {
@@ -15,7 +27,7 @@ function free(address) {
 }
 
 function exit(code) {
-    throw new Error(`Program exited with code ${code}`);
+    throw code;
 }
 
 // Sources:
@@ -33,4 +45,23 @@ function itoa(i, buffer, base) {
     for (let i = 0; i < length; i++) {
         buffer[i] = string[i];
     }
+}
+
+// This function is actually from `stdio.h`, not `stdlib.h`. But the "unhandledrejection" handler above depends on it,
+// and it’s the only thing from `stdio.h` we use.
+function printf(format, ...args) {
+    let element = document.createElement("div");
+    element.id = "screen";
+    const existing = document.getElementById(element.id);
+    if (existing !== null) {
+        if (existing instanceof HTMLCanvasElement) {
+            existing.replaceWith(element);
+        } else {
+            element = existing;
+        }
+    } else {
+        document.body.appendChild(element);
+    }
+    let i = 0;
+    element.textContent += format.replace(/%s/g, () => args[i++]);
 }
