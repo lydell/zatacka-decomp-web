@@ -8,7 +8,6 @@
 // #include <graphics.h>
 // #include <stdlib.h>
 // #include <dos.h>
-// #include <math.h>
 
 const TSCR_FONT = TRIPLEX_SCR_FONT // Triplex Script, font number 7 in Borland Graphics Interface
 const CHAR_SIZE_8X8 =   1 // DEFAULT_FONT at scale 1: 8x8-pixel characters

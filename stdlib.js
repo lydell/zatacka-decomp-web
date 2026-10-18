@@ -65,3 +65,13 @@ function printf(format, ...args) {
     let i = 0;
     element.textContent += format.replace(/%s/g, () => args[i++]);
 }
+
+// These functions are actually from `math.h`, not `stdlib.h`. But we only use `sin` and `cos` from it,
+// so it felt silly having a whole file just for those two. They fit pretty well in a stdlib, too.
+function sin(x) {
+    return Math.sin(x);
+}
+
+function cos(x) {
+    return Math.cos(x);
+}
