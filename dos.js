@@ -135,6 +135,11 @@ window.addEventListener("mouseup", (event) => {
     __waiting();
 });
 
+window.addEventListener("contextmenu", (event) => {
+    if (__vect !== __noop) {
+        event.preventDefault();
+    }
+});
 
 // PRIVATE SECTION END
 
