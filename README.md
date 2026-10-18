@@ -4,7 +4,7 @@
 
 This project translates [zatacka.cpp](https://github.com/SimonAlling/zatacka-decomp/blob/17d557f4b54ac55b0dd05ae0827be1f5e9ff9f52/zatacka.cpp) into [zatacka.js](zatacka.js).
 
-- `#include file.h` is commented out and substituted with `<script src="file.js"></script>` in [index.html](./index.html). `file.js` implements what’s needed to run the game, not the library in full.
+- `#include file.h` are replaced with `<script src="file.js"></script>` in [index.html](./index.html). `file.js` implements what’s needed to run the game, not the library in full.
 - `#define CONSTANT value` is turned into `const CONSTANT = value`.
 - `#define macro(x, y) (x + y)` is turned into `const macro = (x, y) => (x + y)`.
 - `int x;` is turned into `let x = 0;`.
@@ -21,6 +21,6 @@ This project translates [zatacka.cpp](https://github.com/SimonAlling/zatacka-dec
 
 To see all changes compared to `zatacka.cpp`:
 
-    git diff --color-words='define|let|function|return|switch|while|do|goto|int|unsigned|struct|void|char|palettetype|PLAYER_ID|img_head|background under the head|image in each player|.' 814cfce228406e391163f80686a8ebd264de98d1... zatacka.js
+    git diff --color-words='define|const|let|function|return|switch|while|do|goto|int|unsigned|struct|void|char|palettetype|PLAYER_ID|img_head|background under the head|image in each player|.' 814cfce228406e391163f80686a8ebd264de98d1... zatacka.js
 
 The goal of this project is to make the original C++ code run in the browser with as few changes as possible. When actually playing the game, I recommend [kurve.se](https://kurve.se/), which is a faithful re-implementation with multiple quality of life tweaks.

@@ -5,9 +5,6 @@
  *
  * Source: https://github.com/SimonAlling/zatacka-decomp/blob/17d557f4b54ac55b0dd05ae0827be1f5e9ff9f52/zatacka.cpp
  */
-// #include <graphics.h>
-// #include <stdlib.h>
-// #include <dos.h>
 
 const TSCR_FONT = TRIPLEX_SCR_FONT // Triplex Script, font number 7 in Borland Graphics Interface
 const CHAR_SIZE_8X8 =   1 // DEFAULT_FONT at scale 1: 8x8-pixel characters
