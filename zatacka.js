@@ -147,9 +147,9 @@ let alive_count = 0;                                    // DS:0F5E
 let participating_count = 0;                            // DS:0F60
 let cur_player = 0;                                     // DS:0F62
 let loop_i = 0;                                         // DS:0F64  scratch loop variable
-let x = Array(PLAYER_COUNT).fill(0);                    // DS:0F66  exact head position; px is the truncated value
-let y = Array(PLAYER_COUNT).fill(0);                    // DS:0F7E  exact head position; py is the truncated value
-let dir = Array(PLAYER_COUNT).fill(0);                  // DS:0F96  direction in radians (0 = down, grows counter-clockwise)
+let x = new Float32Array(PLAYER_COUNT);                 // DS:0F66  exact head position; px is the truncated value
+let y = new Float32Array(PLAYER_COUNT);                 // DS:0F7E  exact head position; py is the truncated value
+let dir = new Float32Array(PLAYER_COUNT);               // DS:0F96  direction in radians (0 = down, grows counter-clockwise)
 let img_head = Array(PLAYER_COUNT);                     // DS:0FAE  3x3 image in each player's color
 let img_bg = Array(PLAYER_COUNT);                       // DS:0FBA  background under the head; malloc'd, never initialized
 let old_keyboard_isr;                                   // DS:0FC6
@@ -338,7 +338,7 @@ async function label_splash() { // CS:08B9
     })) {
     case label_quit:
         return label_quit();
-    };
+    }
 
     // lobby: left key joins, right key leaves; SPACE starts with at least 2 players
     clear_screen_color(CANVAS_COLOR);
@@ -390,7 +390,7 @@ async function label_splash() { // CS:08B9
     })) {
     case label_quit:
         return label_quit();
-    };
+    }
     settextstyle(TSCR_FONT, HORIZ_DIR, USER_CHAR_SIZE); // the user char size from the splash screen still applies
     return label_round();
 }
@@ -477,7 +477,7 @@ async function label_round() { // CS:0BDD
                 if (mouse_right) dir[cur_player] = dir[cur_player] - TURN_RATE;
             }
         }
-        await delay(15 - alive_count / 2); // fewer players alive: longer frames
+        await delay(15 - Math.trunc(alive_count / 2)); // fewer players alive: longer frames
     }
 }
 
@@ -499,7 +499,7 @@ async function label_round_over() { // CS:1125
     })) {
     case label_splash:
         return label_splash();
-    };
+    }
     return label_round();
 }
 
@@ -521,7 +521,7 @@ async function label_game_over() { // CS:119B
     })) {
     case label_quit:
         return label_quit();
-    };
+    }
     return label_splash();
 }
 

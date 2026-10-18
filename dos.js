@@ -1,28 +1,50 @@
 // PRIVATE SECTION
 
 let __b = 0;
-let __noop = () => {};
+const __noop = () => {};
 let __vect = __noop;
 let __waiting = __noop;
+
+const __held = new Set();
+
+function __key_event(scancode) {
+    __b = scancode;
+    __vect();
+    __waiting();
+}
 
 window.addEventListener("keydown", (event) => {
     if (__vect !== __noop) {
         event.preventDefault();
     }
-    __b = __scancode(event.code);
-    __vect();
-    __waiting();
+    const scancode = __scancode(event.code);
+    __held.add(scancode);
+    __key_event(scancode);
 });
 
 window.addEventListener("keyup", (event) => {
     if (__vect !== __noop) {
         event.preventDefault();
     }
-    __b = __scancode(event.code) | 0x80;
-    __vect();
+    const scancode = __scancode(event.code);
+    __held.delete(scancode);
+    __key_event(scancode | 0x80);
+});
+
+// When the window loses focus, we don’t get any keyup or mouseup events.
+// Release everything, so that nothing gets stuck (which can’t happen in DOS).
+window.addEventListener("blur", () => {
+    for (const scancode of __held) {
+        __key_event(scancode | 0x80);
+    }
+    __held.clear();
+    __bx = 0;
     __waiting();
 });
 
+// Extended keys (such as the arrow keys, right Ctrl and numpad /) send an 0xE0 prefix followed by the
+// same scancode as their non-extended counterpart. ZATACKA.EXE ignores the prefix, so they are mapped
+// to the same scancode here.
 // Sources:
 // https://www.freebasic.net/wiki/GfxScancodes
 // https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_code_values
@@ -55,8 +77,10 @@ function __scancode(code) {
     case "KeyP":           return 0x19;
     case "BracketLeft":    return 0x1A;
     case "BracketRight":   return 0x1B;
-    case "Enter":          return 0x1C;
-    case "ControlLeft":    return 0x1D;
+    case "Enter":
+    case "NumpadEnter":    return 0x1C;
+    case "ControlLeft":
+    case "ControlRight":   return 0x1D;
     case "KeyA":           return 0x1E;
     case "KeyS":           return 0x1F;
     case "KeyD":           return 0x20;
@@ -80,10 +104,12 @@ function __scancode(code) {
     case "KeyM":           return 0x32;
     case "Comma":          return 0x33;
     case "Period":         return 0x34;
-    case "Slash":          return 0x35;
+    case "Slash":
+    case "NumpadDivide":   return 0x35;
     case "ShiftRight":     return 0x36;
     case "NumpadMultiply": return 0x37;
-    case "AltLeft":        return 0x38;
+    case "AltLeft":
+    case "AltRight":       return 0x38;
     case "Space":          return 0x39;
     case "CapsLock":       return 0x3A;
     case "F1":             return 0x3B;
@@ -96,21 +122,32 @@ function __scancode(code) {
     case "F8":             return 0x42;
     case "F9":             return 0x43;
     case "F10":            return 0x44;
-    // case "SC_NUMLOCK":  return 0x45; // Not supported on the web.
+    case "NumLock":        return 0x45;
     case "ScrollLock":     return 0x46;
-    case "Home":           return 0x47;
-    case "ArrowUp":        return 0x48;
-    case "PageUp":         return 0x49;
-    case "ArrowLeft":      return 0x4B;
-    // case "SC_CLEAR":    return 0x4C; // Not supported on the web.
-    // case "SC_CENTER":   return 0x4C; // Not supported on the web.
-    case "ArrowRight":     return 0x4D;
-    // case "SC_PLUS":     return 0x4E; // Not supported on the web.
-    case "End":            return 0x4F;
-    case "ArrowDown":      return 0x50;
-    case "PageDown":       return 0x51;
-    case "Insert":         return 0x52;
-    case "Delete":         return 0x53;
+    case "Home":
+    case "Numpad7":        return 0x47;
+    case "ArrowUp":
+    case "Numpad8":        return 0x48;
+    case "PageUp":
+    case "Numpad9":        return 0x49;
+    case "NumpadSubtract": return 0x4A;
+    case "ArrowLeft":
+    case "Numpad4":        return 0x4B;
+    case "Numpad5":        return 0x4C;
+    case "ArrowRight":
+    case "Numpad6":        return 0x4D;
+    case "NumpadAdd":      return 0x4E;
+    case "End":
+    case "Numpad1":        return 0x4F;
+    case "ArrowDown":
+    case "Numpad2":        return 0x50;
+    case "PageDown":
+    case "Numpad3":        return 0x51;
+    case "Insert":
+    case "Numpad0":        return 0x52;
+    case "Delete":
+    case "NumpadDecimal":  return 0x53;
+    case "IntlBackslash":  return 0x56;
     case "F11":            return 0x57;
     case "F12":            return 0x58;
     default:               return 0;
@@ -123,7 +160,7 @@ window.addEventListener("mousedown", (event) => {
     if (__vect !== __noop) {
         event.preventDefault();
     }
-    __bx = event.buttons;
+    __bx = event.buttons & 7; // A DOS mouse driver only reports left, right and middle.
     __waiting();
 });
 
@@ -131,7 +168,7 @@ window.addEventListener("mouseup", (event) => {
     if (__vect !== __noop) {
         event.preventDefault();
     }
-    __bx = event.buttons;
+    __bx = event.buttons & 7; // A DOS mouse driver only reports left, right and middle.
     __waiting();
 });
 

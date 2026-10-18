@@ -4,13 +4,15 @@
 
 This project translates [zatacka.cpp](https://github.com/SimonAlling/zatacka-decomp/blob/17d557f4b54ac55b0dd05ae0827be1f5e9ff9f52/zatacka.cpp) into [zatacka.js](zatacka.js).
 
-- `#include file.h` are replaced with `<script src="file.js"></script>` in [index.html](./index.html). `file.js` implements what’s needed to run the game, not the library in full.
+- `#include file.h` lines are replaced with `<script src="file.js"></script>` in [index.html](./index.html). `file.js` implements what’s needed to run the game, not the library in full.
 - `#define CONSTANT value` is turned into `const CONSTANT = value`.
 - `#define macro(x, y) (x + y)` is turned into `const macro = (x, y) => (x + y)`.
 - `int x;` is turned into `let x = 0;`.
 - `int arr[LENGTH];` is turned into `let arr = Array(LENGTH).fill(0);`.
+- `float arr[LENGTH];` is turned into `let arr = new Float32Array(LENGTH);`, so that values are rounded to 32-bit floats like in C.
 - `void *arr[LENGTH];` is turned into `let arr = Array(LENGTH);`.
 - `int x = a_float;` is turned into `let x = Math.trunc(a_float);`.
+- Integer division `an_int / 2` is turned into `Math.trunc(an_int / 2)`.
 - Inline `asm` is commented out.
 - Functions: The return type is replaced with the `function` keyword, and the parameter types are removed.
 - `label_name:` is turned into `function label_name() {` (with a matching `}`).

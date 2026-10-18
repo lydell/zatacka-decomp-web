@@ -10,9 +10,12 @@ window.addEventListener("unhandledrejection", (event) => {
         event.preventDefault();
         printf(`Exit ${event.reason}\n`);
         printf("Press any key to restart...\n");
-        window.addEventListener("keydown", () => {
-            window.location.reload();
-        })
+        window.addEventListener("keydown", (event) => {
+            // Ignore auto-repeat of the key that caused the exit (such as ESC being held down).
+            if (!event.repeat) {
+                window.location.reload();
+            }
+        });
     }
 }, true);
 
@@ -42,8 +45,8 @@ function random(n) {
 function itoa(i, buffer, base) {
     const string = i.toString(base);
     const length = Math.min(buffer.length, string.length);
-    for (let i = 0; i < length; i++) {
-        buffer[i] = string[i];
+    for (let j = 0; j < length; j++) {
+        buffer[j] = string[j];
     }
 }
 
