@@ -188,7 +188,7 @@ function keyboard_isr()
     case KEYUP_Q:                 keyR[ID_RED] = 0; break;
     }
 
-    // Acknowledge IRQ 1: send EOI to the master PIC.  Inline // asm because outportb() would load the port into DX; the original uses the immediate-port form of OUT.
+    // Acknowledge IRQ 1: send EOI to the master PIC.  Inline asm because outportb() would load the port into DX; the original uses the immediate-port form of OUT.
     // asm mov al, PIC_EOI
     // asm out PIC_COMMAND_PORT, al
 }
