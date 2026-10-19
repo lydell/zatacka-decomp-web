@@ -25,4 +25,4 @@ To see all changes compared to `zatacka.cpp`:
 
     git diff --color-words='define|const|let|function|return|switch|while|do|goto|int|unsigned|struct|void|char|palettetype|PLAYER_ID|img_head|background under the head|image in each player|.' 814cfce228406e391163f80686a8ebd264de98d1... zatacka.js
 
-The goal of this project is to make the original C++ code run in the browser with as few changes as possible. When actually playing the game, I recommend [kurve.se](https://kurve.se/), which is a faithful re-implementation with multiple quality of life tweaks.
+The goal of this project is to make the original C++ code run in the browser with as few changes as possible. You can try it on [lydell.github.io/zatacka-decomp-web](https://lydell.github.io/zatacka-decomp-web/). When playing the game for fun, I recommend [kurve.se](https://kurve.se/), which is a faithful re-implementation with multiple quality of life tweaks.
